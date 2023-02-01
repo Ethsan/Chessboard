@@ -1,0 +1,12 @@
+﻿---
+BasedOnStyle: Google
+AlignConsecutiveMacros: 'true'
+AlignConsecutiveAssignments: 'true'
+AllowShortCaseLabelsOnASingleLine: 'false'
+ColumnLimit: '80'
+IndentCaseLabels: 'false'
+IndentWidth: '8'
+TabWidth: '8'
+UseTab: ForContinuationAndIndentation
+
+...
