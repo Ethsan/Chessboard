@@ -852,8 +852,7 @@ inline void Chessboard::compute_moves() {
 /*}}}*/
 
 // Move {{{
-int Chessboard::move(Square from, Square to) {
-	if (!(legal_moves[from] & bb_of(to))) return ILLEGAL;
+void Chessboard::move(Square from, Square to) {
 	// TODO en passant
 	Color color = Color(turn_count % 2);
 }
