@@ -1,8 +1,7 @@
-#include <string>
+#pragma once
 
-#include "bitboard.hpp"
-#include "player.hpp"
-#include "view.hpp"
+#include "player/player.hpp"
+#include "view/view.hpp"
 
 class Controller {
        public:
@@ -12,4 +11,4 @@ class Controller {
 
 	virtual Controller& start() = 0;
 	virtual Controller& reset() = 0;
-}
+};

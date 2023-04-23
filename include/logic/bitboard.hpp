@@ -1,8 +1,5 @@
 #pragma once
-#include <stdio.h>
-
 #include <cstdint>
-#include <ios>
 
 #include "utils.hpp"
 
@@ -12,7 +9,7 @@
 #define DIAG_A18H   (Bitboard)0x8040201008040201
 #define DIAG_H1A8   (Bitboard)0x0102040810204080
 
-namespace board {
+namespace bboard {
 
 typedef uint64_t Bitboard;
 
@@ -89,13 +86,9 @@ constexpr Bitboard walls[] = {
     bb_of(LINE_1) | bb_of(ROW_A),  // SOUTH_WEST
 };                                 /*}}}*/
 
-constexpr Direction opposite_direction(Direction d) {
+constexpr Direction opposite(Direction d) {
 	return (d % 2 == 0 ? Direction(d + 1) : Direction(d - 1));
 }
-
-constexpr Direction operator!(Direction d) { return opposite_direction(d); }
-
-constexpr Direction operator~(Direction d) { return opposite_direction(d); }
 
 template <Row r>
 constexpr bool is_on_row(Square square) {
@@ -163,59 +156,15 @@ constexpr Bitboard ray(Square from) {
 
 template <Direction d>
 constexpr Bitboard ray_between(Square from, Square to) {
-	return ray<d>(from) & ray<opposite_direction(d)>(to);
+	return ray<d>(from) & ray<opposite(d)>(to);
 }
 
 template <Direction d>
 constexpr Bitboard ray_between(Square square, Bitboard obstacles) {
-	const Bitboard forward  = ray<d>(Square(square));
-	const Bitboard backward = ray<opposite_direction(d)>(
-	    closest_collision<d>(forward, obstacles));
+	const Bitboard forward = ray<d>(Square(square));
+	const Bitboard backward =
+	    ray<opposite(d)>(closest_collision<d>(forward, obstacles));
 	return forward & backward;
-}
-
-constexpr Bitboard operator|(Bitboard bitboard, Square square) {
-	return bb_of(square) | bitboard;
-}
-
-constexpr Bitboard operator|(Square square, Bitboard bitboard) {
-	return bb_of(square) | bitboard;
-}
-
-constexpr Bitboard operator|(Bitboard bitboard, Row row) {
-	return bb_of(row) | bitboard;
-}
-
-constexpr Bitboard operator|(Row row, Bitboard bitboard) {
-	return bb_of(row) | bitboard;
-}
-
-constexpr Bitboard operator|(Bitboard bitboard, Line line) {
-	return bb_of(line) | bitboard;
-}
-
-constexpr Bitboard operator|(Line line, Bitboard bitboard) {
-	return bb_of(line) | bitboard;
-}
-
-constexpr Bitboard operator&(Bitboard bitboard, Square square) {
-	return bb_of(square) & bitboard;
-}
-
-constexpr Bitboard operator&(Square square, Bitboard bitboard) {
-	return bb_of(square) & bitboard;
-}
-
-constexpr Bitboard operator~(Square square) {
-	return ~bb_of(square);
-}
-
-constexpr Bitboard operator~(Row row) {
-	return ~bb_of(row);
-}
-
-constexpr Bitboard operator~(Line line) {
-	return ~bb_of(line);
 }
 
 }  // namespace bboard
