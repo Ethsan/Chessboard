@@ -166,14 +166,7 @@ inline void Chessboard::fill_array(board::Board& board) const {
 }
 
 board::Board Chessboard::to_array() const {
-	board::Board board            = board::Board();
-	board::Colored_piece no_piece = {.piece = board::NO_PIECE,
-					 .color = board::NO_COLOR};
-	for (auto& line : board) {
-		for (auto& square : line) {
-			square = no_piece;
-		}
-	}
+	board::Board board = board::Board();
 	fill_array<PAWN>(board);
 	fill_array<ROOK>(board);
 	fill_array<KNIGHT>(board);

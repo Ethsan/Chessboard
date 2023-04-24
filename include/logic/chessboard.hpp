@@ -42,6 +42,14 @@ enum Piece : int {
 	PIECE_NONE,
 };
 
+enum GameState : int {
+	WHITE_TO_PLAY,
+	BLACK_TO_PLAY,
+	WHITE_CHECKMATE,
+	BLACK_CHECKMATE,
+	STALEMATE,
+};
+
 // class Chessboard {{{
 class Chessboard {
 	bboard::Bitboard color[2];
@@ -66,6 +74,7 @@ class Chessboard {
 	bool is_attacked(board::Square square) const;
 	board::Colored_piece get_piece(board::Square square) const;
 	board::Board to_array() const;
+	GameState get_game_state() const;
 
        private:
 	inline Piece get_piece(bboard::Square square) const;
