@@ -10,7 +10,6 @@ class Tui : public View {
        public:
 	Tui();
 	Tui(cboard::Chessboard chessboard);
-	Tui(const Tui&) = default;
 
 	Tui& reset(cboard::Chessboard chessboard) override;
 	Tui& update(cboard::Chessboard chessboard) override;

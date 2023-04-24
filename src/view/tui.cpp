@@ -14,6 +14,7 @@ static const constexpr char bright_bg[] = "\033[47m";
 static const constexpr char dark_bg[]   = "\033[40m";
 static const constexpr char reset_bg[]  = "\033[49m";
 
+Tui::Tui() : chessboard(){};
 Tui::Tui(cboard::Chessboard chessboard) { update(chessboard); };
 
 Tui& Tui::reset(cboard::Chessboard chessboard) {

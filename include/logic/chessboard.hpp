@@ -68,6 +68,8 @@ class Chessboard {
 	bool move(board::Square from, board::Square to,
 		  board::Piece promotion = board::NO_PIECE);
 	bool is_legal(board::Square from, board::Square to) const;
+	template <Color c>
+	bool can_castle() const;
 	template <Color c, Side s>
 	bool can_castle() const;
 	bool is_same_as(const Chessboard& chessboard) const;
@@ -135,5 +137,8 @@ class Chessboard {
 
 	template <Color>
 	inline void compute_moves();
+
+	template<Color>
+	inline void compute_legal();
 };
 };  // namespace cboard

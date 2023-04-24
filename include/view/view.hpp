@@ -4,7 +4,7 @@
 
 class View {
        public:
-	View();
+	View() = default;
 	View(cboard::Chessboard);
 	View(const View&) = default;
 
