@@ -8,7 +8,6 @@
 using namespace cboard;
 using namespace bboard;
 
-// Board {{{
 //      A    B    C    D    E    F    G    H
 //   .----.----.----.----.----.----.----.----.
 // 8 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 |
@@ -675,7 +674,6 @@ bool Chessboard::move(board::Square b_from, board::Square b_to,
 	Square to       = convert(b_to);
 
 	Color c = Color(turn_count % 2);
-	bb_print(legal_moves[from]);
 	if (!(legal_moves[from] & bb_of(to))) return false;
 	Piece piece     = get_piece(from);
 	Piece new_piece = piece;

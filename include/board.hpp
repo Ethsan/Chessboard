@@ -103,9 +103,10 @@ enum Line : int {
 
 class Square {
        public:
-	Line line;
+	Line line ;
 	Row row;
 
+	Square() : line{LINE_1}, row{ROW_A} {};
 	Square(Line line, Row row) : line{line}, row{row} {};
 	Square(std::string square) {
 		line = static_cast<Line>(square[1] - '1');
