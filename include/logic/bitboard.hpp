@@ -45,17 +45,17 @@ enum Line : int {
 }; /*}}}*/
 
 // Row {{{
-enum Row : int {
-	ROW_A,
-	ROW_B,
-	ROW_C,
-	ROW_D,
-	ROW_E,
-	ROW_F,
-	ROW_G,
-	ROW_H,
+enum Column : int {
+	COL_A,
+	COL_B,
+	COL_C,
+	COL_D,
+	COL_E,
+	COL_F,
+	COL_G,
+	COL_H,
 
-	ROW_NB = 8
+	COL_NB = 8
 }; /*}}}*/
 
 // Direction {{{
@@ -72,26 +72,26 @@ enum Direction : int {
 	DIRECTION_NB = 8
 }; /*}}}*/
 
-constexpr Bitboard bb_of(Row row) { return BBROW_A << row; };
+constexpr Bitboard bb_of(Column row) { return BBROW_A << row; };
 constexpr Bitboard bb_of(Line line) { return BBLINE_1 << 8 * line; };
 constexpr Bitboard bb_of(Square square) { return (Bitboard)1 << square; }
 
 constexpr Bitboard walls[] = {
     bb_of(LINE_8),                 // NORTH
     bb_of(LINE_1),                 // SOUTH
-    bb_of(ROW_H),                  // EAST
-    bb_of(ROW_A),                  // WEST
-    bb_of(LINE_8) | bb_of(ROW_A),  // NORTH_WEST
-    bb_of(LINE_1) | bb_of(ROW_H),  // SOUTH_EAST
-    bb_of(LINE_8) | bb_of(ROW_H),  // NORTH_EAST
-    bb_of(LINE_1) | bb_of(ROW_A),  // SOUTH_WEST
+    bb_of(COL_H),                  // EAST
+    bb_of(COL_A),                  // WEST
+    bb_of(LINE_8) | bb_of(COL_A),  // NORTH_WEST
+    bb_of(LINE_1) | bb_of(COL_H),  // SOUTH_EAST
+    bb_of(LINE_8) | bb_of(COL_H),  // NORTH_EAST
+    bb_of(LINE_1) | bb_of(COL_A),  // SOUTH_WEST
 };                                 /*}}}*/
 
 constexpr Direction opposite(Direction d) {
 	return (d % 2 == 0 ? Direction(d + 1) : Direction(d - 1));
 }
 
-template <Row r>
+template <Column r>
 constexpr bool is_on_row(Square square) {
 	return square % 8 == r;
 }
@@ -102,18 +102,18 @@ constexpr bool is_on_line(Square square) {
 }
 
 constexpr Bitboard safe_bb_of(Square square) {
-	return (BBLINE_1 << square) * (SQ_A1 <= square & square <= SQ_G8);
+	return ((Bitboard)1 << square) * (SQ_A1 <= square && square <= SQ_H8);
 }
 
 constexpr Bitboard safe_bb_of(Line line) {
-	return (BBLINE_1 << 8 * line) * (LINE_1 <= line & line <= LINE_8);
+	return (BBLINE_1 << 8 * line) * (LINE_1 <= line && line <= LINE_8);
 }
 
-constexpr Bitboard safe_bb_of(Row row) {
-	return (BBROW_A << row) * (ROW_A <= row & row <= ROW_H);
+constexpr Bitboard safe_bb_of(Column row) {
+	return (BBROW_A << row) * (COL_A <= row && row <= COL_H);
 }
 
-constexpr Row row_of(Square square) { return Row(square % 8); }
+constexpr Column row_of(Square square) { return Column(square % 8); }
 constexpr Line line_of(Square square) { return Line(square / 8); }
 
 template <Direction d>
@@ -169,8 +169,8 @@ constexpr Bitboard ray_between(Square square, Bitboard obstacles) {
 }
 
 inline void bb_print(Bitboard bb) {
-	for (int i = 8; i >= 0; i--) {
-		for (int j = 0; j < 8; j++) {
+	for (auto i = 7; i >= 0; i--) {
+		for (auto j = 0; j < 8; j++) {
 			std::cout << ((bb >> (8 * i + j)) & 1);
 		}
 		std::cout << std::endl;

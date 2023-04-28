@@ -8,11 +8,10 @@ class Tui : public View {
 	cboard::Chessboard chessboard;
 
        public:
-	Tui();
-	Tui(cboard::Chessboard chessboard);
+	Tui()           = default;
 	~Tui() override = default;
 
-	Tui& reset(cboard::Chessboard chessboard) override;
-	Tui& update(cboard::Chessboard chessboard) override;
-	Tui& end() override;
+	void start_new_game(cboard::Chessboard chessboard) override;
+	void update(cboard::Chessboard chessboard) override;
+	void end() override;
 };

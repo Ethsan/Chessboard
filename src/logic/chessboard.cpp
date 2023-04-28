@@ -1,67 +1,13 @@
 #include "logic/chessboard.hpp"
 
 #include <iostream>
+#include <ostream>
 
 #include "board.hpp"
 #include "logic/bitboard.hpp"
 
 using namespace cboard;
 using namespace bboard;
-
-//      A    B    C    D    E    F    G    H
-//   .----.----.----.----.----.----.----.----.
-// 8 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 |
-//   :----+----+----+----+----+----+----+----:
-// 7 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 |
-//   :----+----+----+----+----+----+----+----:
-// 6 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 |
-//   :----+----+----+----+----+----+----+----:
-// 5 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 |
-//   :----+----+----+----+----+----+----+----:
-// 4 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 |
-//   :----+----+----+----+----+----+----+----:
-// 3 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 |
-//   :----+----+----+----+----+----+----+----:
-// 2 |  8 |  9 | 10 | 11 | 12 | 13 | 14 | 15 |
-//   :----+----+----+----+----+----+----+----:
-// 1 |  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |
-//   '----'----'----'----'----'----'----'----'
-//   }}}
-
-Chessboard::Chessboard() {
-	color[WHITE] = bb_of(LINE_1) | bb_of(LINE_2);
-	color[BLACK] = bb_of(LINE_8) | bb_of(LINE_7);
-
-	pieces[ROOK] =
-	    bb_of(SQ_A8) | bb_of(SQ_H8) | bb_of(SQ_A1) | bb_of(SQ_H1);
-
-	pieces[KNIGHT] =
-	    bb_of(SQ_B8) | bb_of(SQ_G8) | bb_of(SQ_B1) | bb_of(SQ_G1);
-
-	pieces[BISHOP] =
-	    bb_of(SQ_C8) | bb_of(SQ_F8) | bb_of(SQ_C1) | bb_of(SQ_F1);
-
-	pieces[KING]  = bb_of(SQ_E8) | bb_of(SQ_E1);
-	pieces[QUEEN] = bb_of(SQ_D8) | bb_of(SQ_D1);
-
-	pieces[PAWN] = bb_of(LINE_7) | bb_of(LINE_2);
-
-	turn_count = 0;
-	castling   = ALL;
-	enpassant  = SQ_NONE;
-	compute_legal<WHITE>();
-};
-
-constexpr Color enemy(Color color) {
-	switch (color) {
-	case WHITE:
-		return BLACK;
-	case BLACK:
-		return WHITE;
-	default:
-		assert(false);
-	}
-};
 
 Square convert(board::Square square) {
 	return Square(square.row + square.line * 8);
@@ -131,8 +77,61 @@ constexpr board::Color convert(Color color) {
 		return board::NO_COLOR;
 	}
 }
+//      A    B    C    D    E    F    G    H
+//   .----.----.----.----.----.----.----.----.
+// 8 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 |
+//   :----+----+----+----+----+----+----+----:
+// 7 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 |
+//   :----+----+----+----+----+----+----+----:
+// 6 | 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 |
+//   :----+----+----+----+----+----+----+----:
+// 5 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 |
+//   :----+----+----+----+----+----+----+----:
+// 4 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 |
+//   :----+----+----+----+----+----+----+----:
+// 3 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 |
+//   :----+----+----+----+----+----+----+----:
+// 2 |  8 |  9 | 10 | 11 | 12 | 13 | 14 | 15 |
+//   :----+----+----+----+----+----+----+----:
+// 1 |  0 |  1 |  2 |  3 |  4 |  5 |  6 |  7 |
+//   '----'----'----'----'----'----'----'----'
+//   }}}
 
-bool Chessboard::is_same_as(const Chessboard& chessboard) const {
+Chessboard::Chessboard(const board::Board &board) {
+	for (auto &bitboard : pieces) bitboard = BOARD_CLEAR;
+	for (auto &bitboard : color) bitboard = BOARD_CLEAR;
+
+	int i = 0;
+	for (auto &line : board) {
+		for (auto &square : line) {
+			if (square.piece != board::NO_PIECE) {
+				pieces[convert(square.piece)] |= (Bitboard)1
+								 << i;
+				color[convert(square.color)] |= (Bitboard)1
+								<< i;
+			}
+			i++;
+		}
+	}
+
+	turn_count = 0;
+	castling   = ALL;
+	enpassant  = SQ_NONE;
+	compute_legal<WHITE>();
+};
+
+constexpr Color enemy(Color color) {
+	switch (color) {
+	case WHITE:
+		return BLACK;
+	case BLACK:
+		return WHITE;
+	default:
+		assert(false);
+	}
+};
+
+bool Chessboard::is_same_as(const Chessboard &chessboard) const {
 	return color[WHITE] == chessboard.color[WHITE] &&
 	       color[BLACK] == chessboard.color[BLACK] &&
 	       pieces[PAWN] == chessboard.pieces[PAWN] &&
@@ -151,19 +150,21 @@ bool Chessboard::is_attacked(board::Square bsquare) const {
 }
 
 template <Color c>
-inline void Chessboard::fill_array(board::Board& board) const {
+inline void Chessboard::fill_array(board::Board &board) const {
 	auto pieces_c = color[c];
 	while (pieces_c) {
-		auto square                         = pop_lsb(pieces_c);
+		auto square = pop_lsb(pieces_c);
+
 		board[square / 8][square % 8].color = convert(c);
 	}
 }
 
 template <Piece p>
-inline void Chessboard::fill_array(board::Board& board) const {
+inline void Chessboard::fill_array(board::Board &board) const {
 	auto pieces_p = pieces[p];
 	while (pieces_p) {
-		auto square                         = pop_lsb(pieces_p);
+		auto square = pop_lsb(pieces_p);
+
 		board[square / 8][square % 8].piece = convert(p);
 	}
 }
@@ -182,7 +183,18 @@ board::Board Chessboard::to_array() const {
 	return board;
 }
 
+void Chessboard::set_game_state(GameState game_state) {
+	GameState real_state = get_game_state();
+	if (real_state == ONGOING) {
+		this->game_state = game_state;
+	} else {
+		this->game_state = real_state;
+	}
+}
+
 GameState Chessboard::get_game_state() const {
+	if (game_state != ONGOING) return game_state;
+
 	if (legal_move_count == 0) {
 		if (check_count > 0) {
 			return (turn_count % 2 == WHITE ? BLACK_CHECKMATE
@@ -191,8 +203,9 @@ GameState Chessboard::get_game_state() const {
 			return STALEMATE;
 		}
 	}
-	return (turn_count % 2 == WHITE ? WHITE_TO_PLAY : BLACK_TO_PLAY);
+	return ONGOING;
 }
+
 template <Color c>
 inline bool Chessboard::can_castle() const {
 	return castling & (c == WHITE ? WHITE_CASTLE : BLACK_CASTLE);
@@ -202,6 +215,11 @@ template <Color c, Side s>
 inline bool Chessboard::can_castle() const {
 	return castling & (c == WHITE ? WHITE_CASTLE : BLACK_CASTLE) &
 	       (s == QUEENSIDE ? QUEENSIDE_CASTLE : KINGSIDE_CASTLE);
+}
+
+board::Colored_piece Chessboard::get_piece(board::Square square) const {
+	return board::Colored_piece(convert(get_piece(convert(square))),
+				    convert(get_color(convert(square))));
 }
 
 Piece Chessboard::get_piece(Square square) const {
@@ -225,12 +243,16 @@ inline Bitboard Chessboard::pawn_attack(Square square) {
 	constexpr int dir = c == WHITE ? -1 : 1;
 
 	const Bitboard pawn = bb_of(square);
-	const Bitboard king = pieces[KING] & color[WHITE];
+	const Line line     = line_of(square);
+	const Bitboard king = pieces[KING] & color[c];
 
 	Bitboard attack = safe_bb_of(Square(square + dir * 7)) |
 			  safe_bb_of(Square(square + dir * 9));
 
+	attack &= bb_of(Line(line + dir));
+
 	check |= bool(attack & king) * pawn;
+
 	return attack;
 }
 
@@ -309,34 +331,35 @@ template <Color c>
 inline Bitboard Chessboard::knight_attack(Square square) {
 	const Bitboard king = pieces[KING] & color[c];
 	const Line line     = line_of(square);
-	const Row row       = row_of(square);
+	const Column column = row_of(square);
 
 	const Bitboard line_inner =
 	    safe_bb_of(Line(line - 1)) | safe_bb_of(Line(line + 1));
 	const Bitboard line_outer =
 	    safe_bb_of(Line(line - 2)) | safe_bb_of(Line(line + 2));
-	const Bitboard row_inner =
-	    safe_bb_of(Row(row - 1)) | safe_bb_of(Row(row + 1));
-	const Bitboard row_outer =
-	    safe_bb_of(Row(row - 2)) | safe_bb_of(Row(row + 2));
+	const Bitboard col_inner =
+	    safe_bb_of(Column(column - 1)) | safe_bb_of(Column(column + 1));
+	const Bitboard col_outer =
+	    safe_bb_of(Column(column - 2)) | safe_bb_of(Column(column + 2));
 
 	const Bitboard attack =
-	    (line_inner & row_outer) | (line_outer & row_inner);
+	    (line_inner & col_outer) | (line_outer & col_inner);
 
-	check |= bb_of(square) * !!(attack & king);
+	check |= bb_of(square) * bool(attack & king);
 	return attack;
 }
 
 inline Bitboard Chessboard::king_attack(Square square) {
-	const Line line = line_of(square);
-	const Row row   = row_of(square);
+	const Line line     = line_of(square);
+	const Column column = row_of(square);
 
 	const Bitboard lines = safe_bb_of(Line(line - 1)) | bb_of(Line(line)) |
 			       safe_bb_of(Line(line + 1));
-	const Bitboard rows = safe_bb_of(Row(row - 1)) | bb_of(Row(row)) |
-			      safe_bb_of(Row(row + 1));
+	const Bitboard columns = safe_bb_of(Column(column - 1)) |
+				 bb_of(Column(column)) |
+				 safe_bb_of(Column(column + 1));
 
-	return (lines & rows) & ~bb_of(square);
+	return (lines & columns) & ~bb_of(square);
 }
 
 template <Color c>
@@ -396,26 +419,26 @@ inline Bitboard Chessboard::ray_moves(Square square) {
 
 template <Color c>
 inline Bitboard Chessboard::rook_moves(Square square) {
-	const Bitboard all_pieces = color[BLACK] | color[WHITE];
+	const Bitboard allies = color[c];
 
 	Bitboard moves = BOARD_CLEAR;
 	moves |= ray_moves<NORTH, c>(square);
 	moves |= ray_moves<SOUTH, c>(square);
 	moves |= ray_moves<EAST, c>(square);
 	moves |= ray_moves<WEST, c>(square);
-	return moves & ~all_pieces;
+	return moves & ~allies;
 }
 
 template <Color c>
 inline Bitboard Chessboard::bishop_moves(Square square) {
-	const Bitboard all_pieces = color[BLACK] | color[WHITE];
+	const Bitboard allies = color[c];
 
 	Bitboard moves = BOARD_CLEAR;
 	moves |= ray_moves<NORTH_EAST, c>(square);
 	moves |= ray_moves<SOUTH_EAST, c>(square);
 	moves |= ray_moves<NORTH_WEST, c>(square);
-	moves |= ray_moves<SOUTH_EAST, c>(square);
-	return moves & ~all_pieces;
+	moves |= ray_moves<SOUTH_WEST, c>(square);
+	return moves & ~allies;
 }
 
 template <Color c>
@@ -425,34 +448,36 @@ inline Bitboard Chessboard::queen_moves(Square square) {
 
 template <Color c>
 inline Bitboard Chessboard::knight_moves(Square square) {
-	const Bitboard all_pieces = color[BLACK] | color[WHITE];
+	const Bitboard allies = color[c];
+	const Line line       = line_of(square);
+	const Column column   = row_of(square);
 
-	Bitboard moves = BOARD_CLEAR;
-	moves |= safe_bb_of(Square(square + 6));
-	moves |= safe_bb_of(Square(square + 10));
-	moves |= safe_bb_of(Square(square + 15));
-	moves |= safe_bb_of(Square(square + 17));
-	moves |= safe_bb_of(Square(square - 6));
-	moves |= safe_bb_of(Square(square - 10));
-	moves |= safe_bb_of(Square(square - 15));
-	moves |= safe_bb_of(Square(square - 17));
+	const Bitboard line_inner =
+	    safe_bb_of(Line(line - 1)) | safe_bb_of(Line(line + 1));
+	const Bitboard line_outer =
+	    safe_bb_of(Line(line - 2)) | safe_bb_of(Line(line + 2));
+	const Bitboard col_inner =
+	    safe_bb_of(Column(column - 1)) | safe_bb_of(Column(column + 1));
+	const Bitboard col_outer =
+	    safe_bb_of(Column(column - 2)) | safe_bb_of(Column(column + 2));
 
-	return moves & ~all_pieces;
+	return ((line_inner & col_outer) | (line_outer & col_inner)) & ~allies;
 }
 
 template <Color c>
 inline Bitboard Chessboard::king_moves(Square square) {
-	const Bitboard ally_pieces = color[c];
+	const Bitboard allies = color[c];
 
-	const Line line = line_of(square);
-	const Row row   = row_of(square);
+	const Line line     = line_of(square);
+	const Column column = row_of(square);
 
 	const Bitboard lines = safe_bb_of(Line(line - 1)) | bb_of(Line(line)) |
 			       safe_bb_of(Line(line + 1));
-	const Bitboard rows = safe_bb_of(Row(row - 1)) | bb_of(Row(row)) |
-			      safe_bb_of(Row(row + 1));
+	const Bitboard columns = safe_bb_of(Column(column - 1)) |
+				 bb_of(Column(column)) |
+				 safe_bb_of(Column(column + 1));
 
-	return (lines & rows) & ~ally_pieces & ~attacks;
+	return (lines & columns) & ~allies & ~attacks;
 }
 
 template <Color c>
@@ -482,35 +507,41 @@ inline void Chessboard::king_castle_moves() {
 
 	if (can_castle<c, KINGSIDE>()) {
 		if (!(attacks & king_side) &&
-		    !(all_pieces & king_side_obstacles))
+		    !(all_pieces & king_side_obstacles)) {
 			legal_moves[king_square] |= king_side_castle;
+		}
 	}
 	if (can_castle<c, QUEENSIDE>()) {
 		if (!(attacks & queen_side) &&
-		    !(all_pieces & queen_side_obstacles))
+		    !(all_pieces & queen_side_obstacles)) {
 			legal_moves[king_square] |= queen_side_castle;
+		}
 	}
 }
 
 template <Color c>
 inline void Chessboard::enpassant_moves() {
 	if (enpassant == SQ_NONE) return;
+	std::cout << "enpassant" << std::endl;
+
 	constexpr auto dir = c == WHITE ? 1 : -1;
 
-	const Bitboard ally_pawn = pieces[PAWN] & color[c];
+	const Bitboard pawn_allies = pieces[PAWN] & color[c];
 
-	const bool is_pawn_right = bb_of(Square(enpassant - 1)) & ally_pawn;
-	const bool is_pawn_left  = bb_of(Square(enpassant + 1)) & ally_pawn;
+	const bool is_pawn_right =
+	    bool(bb_of(Square(enpassant + 1)) & pawn_allies);
+	const bool is_pawn_left =
+	    bool(bb_of(Square(enpassant - 1)) & pawn_allies);
 
 	if (!is_pawn_right && !is_pawn_left) return;
 
-	if (is_on_row<ROW_A>(enpassant)) {
+	if (is_on_row<COL_A>(enpassant)) {
 		if (is_pawn_right)
 			legal_moves[enpassant + 1] |=
 			    bb_of(Square(enpassant + dir * 8));
 		return;
 	}
-	if (is_on_row<ROW_H>(enpassant)) {
+	if (is_on_row<COL_H>(enpassant)) {
 		if (is_pawn_left)
 			legal_moves[enpassant - 1] |=
 			    bb_of(Square(enpassant + dir * 8));
@@ -530,26 +561,18 @@ inline void Chessboard::enpassant_moves() {
 	const Bitboard sliders =
 	    (pieces[QUEEN] | pieces[ROOK]) & color[enemy(c)];
 
-	const Bitboard ray_right = is_pawn_right
-				       ? ray<EAST>(Square(enpassant + 1))
-				       : ray<EAST>(enpassant);
-	const Bitboard ray_left  = is_pawn_right
-				       ? ray<WEST>(enpassant)
-				       : ray<WEST>(Square(enpassant - 1));
-	const auto offset        = is_pawn_right ? 1 : -1;
+	const Square right = is_pawn_right ? Square(enpassant + 1) : enpassant;
+	const Square left  = is_pawn_right ? enpassant : Square(enpassant + 1);
 
-	const Square collision_right =
-	    closest_collision<EAST>(ray_right, all_pieces);
-	const Square collision_left =
-	    closest_collision<WEST>(ray_left, all_pieces);
+	const auto offset = is_pawn_right ? 1 : -1;
 
-	const Bitboard collision_bb_right = bb_of(collision_right);
-	const Bitboard collision_bb_left  = bb_of(collision_left);
+	const Bitboard collision_right = ray_between<EAST>(right, all_pieces);
+	bb_print(collision_right);
+	const Bitboard collision_left = ray_between<WEST>(left, all_pieces);
+	bb_print(collision_left);
 
-	if ((collision_bb_left & king) && (collision_bb_right & sliders))
-		return;
-	if ((collision_bb_left & sliders) && (collision_bb_right & king))
-		return;
+	if ((collision_left & king) && (collision_right & sliders)) return;
+	if ((collision_left & sliders) && (collision_right & king)) return;
 
 	legal_moves[enpassant + offset] |= bb_of(Square(enpassant + dir * 8));
 }
@@ -589,22 +612,22 @@ inline void Chessboard::compute_pin() {
 	constexpr bool is_diag = d == NORTH_EAST || d == NORTH_WEST ||
 				 d == SOUTH_EAST || d == SOUTH_WEST;
 
-	const Bitboard king         = pieces[KING] & color[c];
-	const Bitboard ray_king     = ray<d>(Square(lsb(king)));
-	const Bitboard enemy_pieces = color[enemy(c)];
-	const Bitboard ally_pieces  = color[c];
-	const Square enemy =
-	    Square(closest_collision<d>(ray_king, enemy_pieces));
+	const Bitboard king     = pieces[KING] & color[c];
+	const Bitboard ray_king = ray<d>(Square(lsb(king)));
+	const Bitboard enemies  = color[enemy(c)];
+	const Bitboard allies   = color[c] & ~king;
+	const Square enemy = Square(closest_collision<d>(ray_king, enemies));
 	Bitboard sliders =
 	    (pieces[QUEEN] | (is_diag ? pieces[BISHOP] : pieces[ROOK])) &
-	    enemy_pieces;
-	if (!(enemy & sliders)) return;
+	    enemies;
+	if (!(bb_of(enemy) & sliders)) return;
 
 	const Bitboard ray_enemy = ray<opposite(d)>(enemy);
 	const Square first_encounter =
-	    Square(closest_collision<d>(ray_king, ally_pieces));
+	    Square(closest_collision<d>(ray_king, allies & ~king));
 	const Square last_encounter =
-	    Square(closest_collision<opposite(d)>(ray_enemy, ally_pieces));
+	    Square(closest_collision<opposite(d)>(ray_enemy, allies));
+
 	if (first_encounter == last_encounter) {
 		legal_moves[first_encounter] &= ray_enemy;
 	}
@@ -625,27 +648,32 @@ inline void Chessboard::compute_pins() {
 template <Color c>
 inline void Chessboard::compute_moves() {
 	std::fill(legal_moves, legal_moves + 64, BOARD_CLEAR);
-	pieces_moves<KING, c>();
-	if (check_count >= 2) return;
-	pieces_moves<PAWN, c>();
-	pieces_moves<BISHOP, c>();
-	pieces_moves<ROOK, c>();
-	pieces_moves<QUEEN, c>();
-	pieces_moves<KNIGHT, c>();
-	king_castle_moves<c>();
-	enpassant_moves<c>();
-	compute_pins<c>();
-	if (check_count == 1) {
-		for (int i = 0; i < 64; ++i) {
-			legal_moves[i] &= check;
+	if (check_count < 2) {
+		pieces_moves<PAWN, c>();
+		pieces_moves<BISHOP, c>();
+		pieces_moves<ROOK, c>();
+		pieces_moves<QUEEN, c>();
+		pieces_moves<KNIGHT, c>();
+		enpassant_moves<c>();
+		compute_pins<c>();
+		if (check_count == 1) {
+			for (auto &moves : legal_moves) {
+				moves &= check;
+			}
 		}
 	}
+	pieces_moves<KING, c>();
+	king_castle_moves<c>();
 }
 
 template <Color c>
 inline void Chessboard::compute_legal() {
 	enemy_attacks<c>();
 	compute_moves<c>();
+	legal_move_count = 0;
+	for (auto &moves : legal_moves) {
+		legal_move_count += popcount(moves);
+	}
 }
 
 inline void Chessboard::update_castle(Square rook) {
@@ -674,6 +702,7 @@ bool Chessboard::move(board::Square b_from, board::Square b_to,
 	Square to       = convert(b_to);
 
 	Color c = Color(turn_count % 2);
+	bb_print(legal_moves[from]);
 	if (!(legal_moves[from] & bb_of(to))) return false;
 	Piece piece     = get_piece(from);
 	Piece new_piece = piece;
@@ -719,6 +748,9 @@ bool Chessboard::move(board::Square b_from, board::Square b_to,
 	} else if (piece == ROOK) {
 		update_castle(from);
 	}
+	if (piece != PAWN) {
+		enpassant = SQ_NONE;
+	}
 
 	if (captured != PIECE_NONE) {
 		if (captured == ROOK) {
@@ -738,6 +770,13 @@ bool Chessboard::move(board::Square b_from, board::Square b_to,
 		compute_legal<WHITE>();
 	} else {
 		compute_legal<BLACK>();
+	}
+	std::cout << "Move count :" << legal_move_count << std::endl;
+	auto count = 0;
+	for (auto &moves : legal_moves) {
+		std::cout << count++ << " : ";
+		if (moves) bb_print(moves);
+		std::cout << std::endl;
 	}
 
 	return true;

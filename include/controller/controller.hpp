@@ -1,14 +1,34 @@
 #pragma once
 
+#include <memory>
+
+#include "board.hpp"
+#include "logic/chessboard.hpp"
 #include "player/player.hpp"
+#include "view/noop_view.hpp"
 #include "view/view.hpp"
 
 class Controller {
-       public:
-	Controller(Player player1, Player player2, View view, std::string pgn);
-	Controller(Player player1, Player player2, View view);
-	virtual ~Controller() = 0;
+       private:
+	std::unique_ptr<Player> white;
+	std::unique_ptr<Player> black;
+	std::unique_ptr<View> view;
+	cboard::Chessboard chessboard;
 
-	virtual Controller& start() = 0;
-	virtual Controller& reset() = 0;
+       public:
+	Controller(std::unique_ptr<Player> white, std::unique_ptr<Player> black,
+		   std::unique_ptr<View> view,
+		   board::Board board = board::initial_board)
+	    : white(std::move(white)),
+	      black(std::move(black)),
+	      view(std::move(view)),
+	      chessboard(board){};
+	Controller(std::unique_ptr<Player> white, std::unique_ptr<Player> black,
+		   board::Board board = board::initial_board)
+	    : white(std::move(white)),
+	      black(std::move(black)),
+	      view(std::make_unique<View_noop>()),
+	      chessboard(board){};
+
+	void start();
 };

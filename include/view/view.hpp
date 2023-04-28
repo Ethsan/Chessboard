@@ -8,7 +8,7 @@ class View {
 	View(cboard::Chessboard);
 	virtual ~View() = default;
 
-	virtual View& reset(cboard::Chessboard board)  = 0;
-	virtual View& update(cboard::Chessboard board) = 0;
-	virtual View& end()                            = 0;
+	virtual void start_new_game(cboard::Chessboard board) = 0;
+	virtual void update(cboard::Chessboard board)         = 0;
+	virtual void end()                                    = 0;
 };

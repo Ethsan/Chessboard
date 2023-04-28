@@ -43,8 +43,7 @@ enum Piece : int {
 };
 
 enum GameState : int {
-	WHITE_TO_PLAY,
-	BLACK_TO_PLAY,
+	ONGOING,
 	WHITE_CHECKMATE,
 	BLACK_CHECKMATE,
 	STALEMATE,
@@ -62,9 +61,10 @@ class Chessboard {
 	unsigned int legal_move_count;
 	unsigned int check_count;
 	Castling castling;
+	GameState game_state = ONGOING;
 
        public:
-	Chessboard();
+	Chessboard(const board::Board& board = board::initial_board);
 	bool move(board::Square from, board::Square to,
 		  board::Piece promotion = board::NO_PIECE);
 	bool is_legal(board::Square from, board::Square to) const;
@@ -77,6 +77,7 @@ class Chessboard {
 	board::Colored_piece get_piece(board::Square square) const;
 	board::Board to_array() const;
 	GameState get_game_state() const;
+	void set_game_state(GameState game_state);
 
        private:
 	inline Piece get_piece(bboard::Square square) const;
@@ -138,7 +139,7 @@ class Chessboard {
 	template <Color>
 	inline void compute_moves();
 
-	template<Color>
+	template <Color>
 	inline void compute_legal();
 };
 };  // namespace cboard

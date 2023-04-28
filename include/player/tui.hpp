@@ -5,13 +5,13 @@
 class Player_tui : public Player {
 	bool parse_move(std::string input, Move& move);
 	bool is_white;
+	bool is_started = false;
 
        public:
-	Player_tui(bool is_white) : is_white(is_white) {}
 	~Player_tui() override = default;
 
-	Player_tui& reset(bool is_white) override;
+	void start_new_game(bool is_white) override;
 	Move play(cboard::Chessboard chessboard) override;
 	Move invalid_move(cboard::Chessboard chessboard) override;
-	Player_tui& end() override;
+	void end() override;
 };

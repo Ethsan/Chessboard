@@ -13,15 +13,12 @@ struct Move {
 };
 
 class Player {
-       protected:
-	Player();
-
        public:
-	Player(bool is_white);
+	Player() = default;
 	virtual ~Player() = default;
 
-	virtual Player& reset(bool is_white)                     = 0;
+	virtual void start_new_game(bool is_white)               = 0;
 	virtual Move play(cboard::Chessboard chessboard)         = 0;
 	virtual Move invalid_move(cboard::Chessboard chessboard) = 0;
-	virtual Player& end()                                    = 0;
+	virtual void end()                                       = 0;
 };
