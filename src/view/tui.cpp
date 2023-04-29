@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
 #include "board.hpp"
@@ -24,6 +25,8 @@ std::string to_string(cboard::GameState state) {
 		return "0-1";
 	case cboard::STALEMATE:
 		return "1/2-1/2";
+	default:
+		throw std::invalid_argument("Incorrect GameState");
 	}
 }
 
