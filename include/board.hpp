@@ -183,15 +183,15 @@ const Board initial_board{{{wR, wN, wB, wQ, wK, wB, wN, wR},
 			   {bP, bP, bP, bP, bP, bP, bP, bP},
 			   {bR, bN, bB, bQ, bK, bB, bN, bR}}};
 
-enum Row : int {
-	ROW_A,
-	ROW_B,
-	ROW_C,
-	ROW_D,
-	ROW_E,
-	ROW_F,
-	ROW_G,
-	ROW_H,
+enum Column : int {
+	COL_A,
+	COL_B,
+	COL_C,
+	COL_D,
+	COL_E,
+	COL_F,
+	COL_G,
+	COL_H,
 };
 
 enum Line : int {
@@ -208,16 +208,16 @@ enum Line : int {
 class Square {
        public:
 	Line line;
-	Row row;
+	Column col;
 
-	Square() : line{LINE_1}, row{ROW_A} {};
-	Square(Line line, Row row) : line{line}, row{row} {};
+	Square() : line{LINE_1}, col{COL_A} {};
+	Square(Line line, Column col) : line{line}, col{col} {};
 	Square(std::string square) {
 		line = static_cast<Line>(square[1] - '1');
-		row  = static_cast<Row>(square[0] - 'a');
+		col  = static_cast<Column>(square[0] - 'a');
 	};
 	std::string to_string() const {
-		return std::string{static_cast<char>(row + 'a')} +
+		return std::string{static_cast<char>(col + 'a')} +
 		       std::string{static_cast<char>(line + '1')};
 	};
 };

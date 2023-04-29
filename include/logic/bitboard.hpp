@@ -72,7 +72,7 @@ enum Direction : int {
 	DIRECTION_NB = 8
 }; /*}}}*/
 
-constexpr Bitboard bb_of(Column row) { return BBROW_A << row; };
+constexpr Bitboard bb_of(Column col) { return BBROW_A << col; };
 constexpr Bitboard bb_of(Line line) { return BBLINE_1 << 8 * line; };
 constexpr Bitboard bb_of(Square square) { return (Bitboard)1 << square; }
 
@@ -92,7 +92,7 @@ constexpr Direction opposite(Direction d) {
 }
 
 template <Column r>
-constexpr bool is_on_row(Square square) {
+constexpr bool is_on_col(Square square) {
 	return square % 8 == r;
 }
 
@@ -101,23 +101,23 @@ constexpr bool is_on_line(Square square) {
 	return square / 8 == l;
 }
 
-constexpr Bitboard safe_bb_of(Square square) {
+constexpr Bitboard bounded_bb_of(Square square) {
 	return ((Bitboard)1 << square) * (SQ_A1 <= square && square <= SQ_H8);
 }
 
-constexpr Bitboard safe_bb_of(Line line) {
+constexpr Bitboard bounded_bb_of(Line line) {
 	return (BBLINE_1 << 8 * line) * (LINE_1 <= line && line <= LINE_8);
 }
 
-constexpr Bitboard safe_bb_of(Column row) {
-	return (BBROW_A << row) * (COL_A <= row && row <= COL_H);
+constexpr Bitboard bounded_bb_of(Column col) {
+	return (BBROW_A << col) * (COL_A <= col && col <= COL_H);
 }
 
-constexpr Column row_of(Square square) { return Column(square % 8); }
+constexpr Column col_of(Square square) { return Column(square % 8); }
 constexpr Line line_of(Square square) { return Line(square / 8); }
 
 template <Direction d>
-constexpr Square closest_collision(Bitboard ray, Bitboard obstacles) {
+constexpr Square collision(Bitboard ray, Bitboard obstacles) {
 	if (d % 2 == 0) {
 		return Square(lsb(ray & (obstacles | walls[d])));
 	} else {
@@ -129,28 +129,28 @@ template <Direction d>
 constexpr Bitboard ray(Square from) {
 	switch (d) {
 	case NORTH:
-		return BBROW_A << (row_of(from) + 8 * line_of(from));
+		return BBROW_A << (col_of(from) + 8 * line_of(from));
 	case SOUTH:
-		return (BBROW_A << row_of(from)) >> 8 * (7 - line_of(from));
+		return (BBROW_A << col_of(from)) >> 8 * (7 - line_of(from));
 	case EAST:
-		return BBLINE_1 >> row_of(from)
-				       << (row_of(from) + 8 * line_of(from));
+		return BBLINE_1 >> col_of(from)
+				       << (col_of(from) + 8 * line_of(from));
 	case WEST:
-		return BBLINE_1 >> (7 - row_of(from)) << 8 * line_of(from);
+		return BBLINE_1 >> (7 - col_of(from)) << 8 * line_of(from);
 	case NORTH_WEST:
-		return DIAG_H1A8 << 8 * (7 - row_of(from)) >>
-		       8 * (7 - row_of(from)) >>
-		       (7 - row_of(from)) << 8 * line_of(from);
+		return DIAG_H1A8 << 8 * (7 - col_of(from)) >>
+		       8 * (7 - col_of(from)) >>
+		       (7 - col_of(from)) << 8 * line_of(from);
 	case SOUTH_EAST:
 		return DIAG_H1A8 >>
-		       8 * row_of(from) << 8 * row_of(from) << row_of(from) >>
+		       8 * col_of(from) << 8 * col_of(from) << col_of(from) >>
 		       8 * (7 - line_of(from));
 	case NORTH_EAST:
-		return DIAG_A18H << 9 * row_of(from) >>
-		       8 * row_of(from) << 8 * line_of(from);
+		return DIAG_A18H << 9 * col_of(from) >>
+		       8 * col_of(from) << 8 * line_of(from);
 	case SOUTH_WEST:
 		return DIAG_A18H >>
-		       9 * (7 - row_of(from)) << 8 * (7 - row_of(from)) >>
+		       9 * (7 - col_of(from)) << 8 * (7 - col_of(from)) >>
 		       8 * (7 - line_of(from));
 	}
 }
@@ -164,7 +164,7 @@ template <Direction d>
 constexpr Bitboard ray_between(Square square, Bitboard obstacles) {
 	const Bitboard forward = ray<d>(Square(square));
 	const Bitboard backward =
-	    ray<opposite(d)>(closest_collision<d>(forward, obstacles));
+	    ray<opposite(d)>(collision<d>(forward, obstacles));
 	return forward & backward;
 }
 

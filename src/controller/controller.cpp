@@ -17,7 +17,7 @@ void Controller::start() {
 		Move move   = is_invalid ? player->invalid_move(chessboard)
 					 : player->play(chessboard);
 		if (move.decision == PLAY) {
-			if (!chessboard.move(move.from, move.to,
+			if (!chessboard.make_move(move.from, move.to,
 					     move.promotion)) {
 				is_invalid = true;
 				continue;

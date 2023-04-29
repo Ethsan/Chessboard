@@ -54,7 +54,7 @@ class Chessboard {
 	bboard::Bitboard color[2];
 	bboard::Bitboard pieces[6];
 	bboard::Bitboard attacks;
-	bboard::Bitboard check;
+	bboard::Bitboard threat;
 	bboard::Bitboard legal_moves[64];
 	bboard::Square enpassant;
 	unsigned int turn_count;
@@ -65,7 +65,7 @@ class Chessboard {
 
        public:
 	Chessboard(const board::Board& board = board::initial_board);
-	bool move(board::Square from, board::Square to,
+	bool make_move(board::Square from, board::Square to,
 		  board::Piece promotion = board::NO_PIECE);
 	bool is_legal(board::Square from, board::Square to) const;
 	template <Color c>
@@ -80,66 +80,71 @@ class Chessboard {
 	void set_game_state(GameState game_state);
 
        private:
+	// --- Utils ---
 	inline Piece get_piece(bboard::Square square) const;
 	inline Color get_color(bboard::Square square) const;
-	inline void update_castle(bboard::Square rook);
 	template <Piece p>
 	inline void fill_array(board::Board& board) const;
 	template <Color c>
 	inline void fill_array(board::Board& board) const;
 	template <Color>
-	inline bboard::Bitboard pawn_attack(bboard::Square square);
+
+	// --- Move computation ---
+	// ++++++++ attack ++++++++
+	inline void compute_pawn_attack(bboard::Square square);
 	template <bboard::Direction d, Color c>
-	inline bboard::Bitboard ray_attack(bboard::Square square);
+	inline void compute_ray_attack(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard rook_attack(bboard::Square square);
+	inline void compute_rook_attack(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard bishop_attack(bboard::Square square);
+	inline void compute_bishop_attack(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard knight_attack(bboard::Square square);
+	inline void compute_knight_attack(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard queen_attack(bboard::Square square);
-	inline bboard::Bitboard king_attack(bboard::Square square);
+	inline void compute_queen_attack(bboard::Square square);
+	inline void compute_king_attack(bboard::Square square);
 
 	template <Piece p, Color c>
-	constexpr bboard::Bitboard piece_attack(bboard::Square square);
+	inline void compute_attack(bboard::Square square);
 	template <Piece p, Color c>
-	inline void pieces_attack();
-
+	inline void compute_pieces_attack();
 	template <Color>
-	inline void enemy_attacks();
+	inline void compute_attacks();
 
+	// ++++++++ move ++++++++
 	template <bboard::Direction d, Color c>
-	inline bboard::Bitboard ray_moves(bboard::Square square);
+	inline void compute_ray_moves(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard pawn_moves(bboard::Square square);
+	inline void compute_pawn_moves(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard rook_moves(bboard::Square square);
+	inline void compute_rook_moves(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard bishop_moves(bboard::Square square);
+	inline void compute_bishop_moves(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard knight_moves(bboard::Square square);
+	inline void compute_knight_moves(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard queen_moves(bboard::Square square);
+	inline void compute_queen_moves(bboard::Square square);
 	template <Color>
-	inline bboard::Bitboard king_moves(bboard::Square square);
+	inline void compute_king_moves(bboard::Square square);
 	template <Piece p, Color c>
-	constexpr bboard::Bitboard piece_moves(bboard::Square square);
-	template <Piece p, Color c>
-	inline void pieces_moves();
+	constexpr void compute_piece_moves(bboard::Square square);
 	template <Color c>
-	inline void enpassant_moves();
+	inline void compute_enpassant();
 	template <Color>
-	inline void king_castle_moves();
+	inline void compute_castling();
+
 	template <Color c, bboard::Direction d>
 	inline void compute_pin();
 	template <Color c>
 	inline void compute_pins();
+	template <Piece p, Color c>
+	inline void compute_pieces_moves();
 
 	template <Color>
 	inline void compute_moves();
-
 	template <Color>
 	inline void compute_legal();
+
+	inline void update_castle(bboard::Square rook);
 };
 };  // namespace cboard
