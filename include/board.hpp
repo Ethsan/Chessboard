@@ -220,6 +220,7 @@ class Square {
 		return std::string{static_cast<char>(col + 'a')} +
 		       std::string{static_cast<char>(line + '1')};
 	};
+
 };
 
 }  // namespace board

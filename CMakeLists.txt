@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
-project(chess_project)
+project(chess_project VERSION 1.0)
+
+include(CTest)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -15,19 +17,14 @@ else()
 endif()
 
 add_executable(chess_project
-        include/controller/controller.hpp
-        include/logic/bitboard.hpp
-        include/logic/chessboard.hpp
-        include/logic/utils.hpp
-        include/player/player.hpp
-        include/player/tui.hpp
-        include/view/multiplexer.hpp
-        include/view/noop_view.hpp
-        include/view/tui.hpp
-        include/view/view.hpp
-        include/board.hpp
         src/controller/controller.cpp
         src/logic/chessboard.cpp
         src/player/tui.cpp
         src/view/tui.cpp
         src/main.cpp)
+
+add_test(NAME test_1_chess_project COMMAND ./test-level.sh 1 ./chess_project)
+add_test(NAME test_2_chess_project COMMAND ./test-level.sh 2 ./chess_project)
+add_test(NAME test_3_chess_project COMMAND ./test-level.sh 3 ./chess_project)
+add_test(NAME test_4_chess_project COMMAND ./test-level.sh 4 ./chess_project)
+
