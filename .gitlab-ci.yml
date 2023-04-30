@@ -11,7 +11,6 @@ build_local:
     paths:
       - build/
 
-
 test_local:
   stage: test
   tags:

@@ -1,0 +1,39 @@
+DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
+PROJECT_BRIEF          = "Simple échiquier pour jouer à deux"
+OUTPUT_DIRECTORY       = @PROJECT_BINARY_DIR@/docs
+
+STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@ \
+                         @PROJECT_BINARY_DIR@
+
+BUILTIN_STL_SUPPORT = YES
+
+INPUT                  = @doxy_main_page@ \
+                         @PROJECT_SOURCE_DIR@
+INPUT_ENCODING         = UTF-8
+RECURSIVE              = YES
+
+EXTRACT_ALL = YES
+# Show private members of class
+EXTRACT_PRIVATE = YES
+
+# Show static members of class
+EXTRACT_STATIC = YES
+
+# Add all the header and source file extensions used
+FILE_PATTERNS = *.cpp *.hpp
+
+TAB_SIZE = 8
+
+QUIET = YES
+
+# Function source code shown inline
+INLINE_SOURCES = YES
+
+GENERATE_TREEVIEW = YES
+
+# Use UML notation for class diagrams
+UML_LOOK = YES
+
+# Show all members in UML class
+UML_LIMIT_NUM_FIELDS = 0
