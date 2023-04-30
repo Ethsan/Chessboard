@@ -1,5 +1,0 @@
-test_1_chess_project 6 0.0748459
-test_2_chess_project 6 0.0243701
-test_3_chess_project 6 0.158886
-test_4_chess_project 6 0.102621
----
