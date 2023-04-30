@@ -1,6 +1,6 @@
 # chess-project
 
-Simple échéquier
+Simple échiquier
 
 ## Construire le projet
 
