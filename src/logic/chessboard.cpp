@@ -397,9 +397,8 @@ inline void Chessboard::compute_pawn_moves(Square square) {
 
 	Bitboard push_moves = BOARD_CLEAR;
 	push_moves |= bb_of(Square(square + dir * 8));
-	push_moves |=
-	    bb_of(Square(square + dir * 16)) * isOnLine2<c>(square) *
-	    !(bb_of(Square(square + dir * 8)) & all_pieces);
+	push_moves |= bb_of(Square(square + dir * 16)) * isOnLine2<c>(square) *
+		      !(bb_of(Square(square + dir * 8)) & all_pieces);
 	push_moves &= ~all_pieces;
 
 	legal_moves[square] |= attack_moves | push_moves;
@@ -559,7 +558,7 @@ inline void Chessboard::compute_enpassant() {
 	const auto offset = is_pawn_right ? 1 : -1;
 
 	const Bitboard collision_right = ray_between<EAST>(right, all_pieces);
-	const Bitboard collision_left = ray_between<WEST>(left, all_pieces);
+	const Bitboard collision_left  = ray_between<WEST>(left, all_pieces);
 
 	if ((collision_left & king) && (collision_right & sliders)) return;
 	if ((collision_left & sliders) && (collision_right & king)) return;

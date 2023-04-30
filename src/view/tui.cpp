@@ -54,7 +54,7 @@ void Tui::update(cboard::Chessboard chessboard) {
 
 void Tui::end() {
 	const Board board = chessboard.to_array();
-	cout<<endl;
+	cout << endl;
 	for (auto& line : board) {
 		for (auto& square : line) {
 			cout << square.to_pgn() << ',';

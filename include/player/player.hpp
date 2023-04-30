@@ -14,7 +14,7 @@ struct Move {
 
 class Player {
        public:
-	Player() = default;
+	Player()          = default;
 	virtual ~Player() = default;
 
 	virtual void start_new_game(bool is_white)               = 0;

@@ -15,7 +15,6 @@ class Controller {
 	std::unique_ptr<View> view;
 	cboard::Chessboard chessboard;
 
-
        public:
 	Controller(std::unique_ptr<Player> white, std::unique_ptr<Player> black,
 		   std::unique_ptr<View> view,

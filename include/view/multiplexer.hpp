@@ -6,15 +6,17 @@
 
 template <class U, class V>
 class Demultiplexer : public View {
-	static_assert(std::is_base_of<View, U>::value, "U is not derived from View");
-	static_assert(std::is_base_of<View, V>::value, "V is not derived from View");
+	static_assert(std::is_base_of<View, U>::value,
+		      "U is not derived from View");
+	static_assert(std::is_base_of<View, V>::value,
+		      "V is not derived from View");
 
        private:
 	std::unique_ptr<U> u = std::make_unique<U>();
 	std::unique_ptr<V> v = std::make_unique<V>();
 
        public:
-	Demultiplexer()                               = default;
+	Demultiplexer()                                 = default;
 	Demultiplexer(const Demultiplexer &)            = delete;
 	Demultiplexer(Demultiplexer &&)                 = delete;
 	Demultiplexer &operator=(const Demultiplexer &) = delete;
