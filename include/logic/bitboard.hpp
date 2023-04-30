@@ -72,8 +72,8 @@ enum Direction : int {
 	DIRECTION_NB = 8
 }; /*}}}*/
 
-constexpr Bitboard bb_of(Column col) { return BBROW_A << col; };
-constexpr Bitboard bb_of(Line line) { return BBLINE_1 << 8 * line; };
+constexpr Bitboard bb_of(Column col) { return BBROW_A << col; }
+constexpr Bitboard bb_of(Line line) { return BBLINE_1 << 8 * line; }
 constexpr Bitboard bb_of(Square square) { return (Bitboard)1 << square; }
 
 constexpr Bitboard walls[] = {

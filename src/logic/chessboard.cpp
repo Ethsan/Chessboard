@@ -118,7 +118,7 @@ Chessboard::Chessboard(const board::Board &board) {
 	castling   = ALL;
 	enpassant  = SQ_NONE;
 	compute_legal<WHITE>();
-};
+}
 
 constexpr Color enemy(Color color) {
 	switch (color) {
@@ -129,7 +129,7 @@ constexpr Color enemy(Color color) {
 	default:
 		assert(false);
 	}
-};
+}
 
 bool Chessboard::is_same_as(const Chessboard &chessboard) const {
 	return color[WHITE] == chessboard.color[WHITE] &&

@@ -66,7 +66,7 @@ class Chessboard {
        public:
 	Chessboard(const board::Board& board = board::initial_board);
 	bool make_move(board::Square from, board::Square to,
-		  board::Piece promotion = board::NO_PIECE);
+		       board::Piece promotion = board::NO_PIECE);
 	bool is_legal(board::Square from, board::Square to) const;
 	template <Color c>
 	bool can_castle() const;
@@ -147,4 +147,4 @@ class Chessboard {
 
 	inline void update_castle(bboard::Square rook);
 };
-};  // namespace cboard
+}  // namespace cboard

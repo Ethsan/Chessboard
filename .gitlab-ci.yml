@@ -1,0 +1,25 @@
+stages:
+  - build
+  - test
+
+build_local:
+  stage: build
+  tags:
+    - linux
+  script: "mkdir -p build && cd build && cmake .. && cmake --build ."
+  artifacts:
+    paths:
+      - build/
+
+
+test_local:
+  stage: test
+  tags:
+    - linux
+  script: "cd build && ctest"
+  dependencies:
+    - build_local
+  artifacts:
+    paths:
+      - build/
+

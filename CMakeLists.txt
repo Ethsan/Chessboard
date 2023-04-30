@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.20)
 project(chess_project VERSION 1.0)
 
 include(CTest)
@@ -23,8 +23,8 @@ add_executable(chess_project
         src/view/tui.cpp
         src/main.cpp)
 
-add_test(NAME test_1_chess_project COMMAND ./test-level.sh 1 ./chess_project)
-add_test(NAME test_2_chess_project COMMAND ./test-level.sh 2 ./chess_project)
-add_test(NAME test_3_chess_project COMMAND ./test-level.sh 3 ./chess_project)
-add_test(NAME test_4_chess_project COMMAND ./test-level.sh 4 ./chess_project)
+add_test(NAME test_1_chess_project COMMAND sh -c "cd ${PROJECT_SOURCE_DIR} && ./test-level.sh 1 ${CMAKE_CURRENT_BINARY_DIR}/chess_project")
+add_test(NAME test_2_chess_project COMMAND sh -c "cd ${PROJECT_SOURCE_DIR} && ./test-level.sh 2 ${CMAKE_CURRENT_BINARY_DIR}/chess_project")
+add_test(NAME test_3_chess_project COMMAND sh -c "cd ${PROJECT_SOURCE_DIR} && ./test-level.sh 3 ${CMAKE_CURRENT_BINARY_DIR}/chess_project")
+add_test(NAME test_4_chess_project COMMAND sh -c "cd ${PROJECT_SOURCE_DIR} && ./test-level.sh 4 ${CMAKE_CURRENT_BINARY_DIR}/chess_project")
 
