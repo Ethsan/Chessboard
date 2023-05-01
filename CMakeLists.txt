@@ -20,6 +20,7 @@ add_executable(chess_project
         src/controller/controller.cpp
         src/logic/chessboard.cpp
         src/player/tui.cpp
+	src/player/player_random.cpp
         src/view/tui.cpp
 	src/board.cpp
         src/main.cpp)
