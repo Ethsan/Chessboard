@@ -7,14 +7,13 @@
 #include "board.hpp"
 #include "logic/bitboard.hpp"
 
-namespace cboard {
-
+namespace logic {
 enum Side {
 	KINGSIDE,
 	QUEENSIDE,
 };
 
-enum Castling : char {
+enum Castling {
 	WHITE_OO         = 1 << 0,
 	WHITE_OOO        = 1 << 1,
 	BLACK_OO         = 1 << 2,
@@ -26,13 +25,13 @@ enum Castling : char {
 	ALL              = WHITE_CASTLE | BLACK_CASTLE,
 };
 
-enum Color : int {
+enum Color {
 	WHITE,
 	BLACK,
 	COLOR_NONE,
 };
 
-enum Piece : int {
+enum Piece {
 	PAWN,
 	ROOK,
 	KNIGHT,
@@ -41,8 +40,9 @@ enum Piece : int {
 	KING,
 	PIECE_NONE,
 };
+}  // namespace logic
 
-enum GameState : int {
+enum GameState {
 	ONGOING,
 	WHITE_CHECKMATE,
 	BLACK_CHECKMATE,
@@ -51,100 +51,106 @@ enum GameState : int {
 
 // class Chessboard {{{
 class Chessboard {
-	bboard::Bitboard color[2];
-	bboard::Bitboard pieces[6];
-	bboard::Bitboard attacks;
-	bboard::Bitboard threat;
-	bboard::Bitboard legal_moves[64];
-	bboard::Square enpassant;
+	logic::Bitboard color[2];
+	logic::Bitboard pieces[6];
+	logic::Bitboard attacks;
+	logic::Bitboard threat;
+	logic::Bitboard legal_moves[64];
+	logic::Square enpassant;
 	unsigned int turn_count;
 	unsigned int legal_move_count;
 	unsigned int check_count;
-	Castling castling;
+	logic::Castling castling;
 	GameState game_state = ONGOING;
+	board::Move last_move;
 
        public:
 	Chessboard(const board::Board& board = board::initial_board);
-	bool make_move(board::Square from, board::Square to,
-		       board::Piece promotion = board::NO_PIECE);
+
+	bool make_move(board::Move move);
+
 	bool is_legal(board::Square from, board::Square to) const;
-	template <Color c>
-	bool can_castle() const;
-	template <Color c, Side s>
-	bool can_castle() const;
 	bool is_same_as(const Chessboard& chessboard) const;
 	bool is_attacked(board::Square square) const;
+
 	board::Colored_piece get_piece(board::Square square) const;
-	board::Board to_array() const;
+
 	GameState get_game_state() const;
 	void set_game_state(GameState game_state);
 
+	board::Move get_last_move() const { return last_move; };
+
+	board::Board to_array() const;
+
        private:
 	// --- Utils ---
-	inline Piece get_piece(bboard::Square square) const;
-	inline Color get_color(bboard::Square square) const;
-	template <Piece p>
+	template <logic::Color c>
+	bool can_castle() const;
+	template <logic::Color c, logic::Side s>
+	bool can_castle() const;
+	inline logic::Piece get_piece(logic::Square square) const;
+	inline logic::Color get_color(logic::Square square) const;
+	template <logic::Piece p>
 	inline void fill_array(board::Board& board) const;
-	template <Color c>
+	template <logic::Color c>
 	inline void fill_array(board::Board& board) const;
-	template <Color>
+	template <logic::Color>
 
 	// --- Move computation ---
 	// ++++++++ attack ++++++++
-	inline void compute_pawn_attack(bboard::Square square);
-	template <bboard::Direction d, Color c>
-	inline void compute_ray_attack(bboard::Square square);
-	template <Color>
-	inline void compute_rook_attack(bboard::Square square);
-	template <Color>
-	inline void compute_bishop_attack(bboard::Square square);
-	template <Color>
-	inline void compute_knight_attack(bboard::Square square);
-	template <Color>
-	inline void compute_queen_attack(bboard::Square square);
-	inline void compute_king_attack(bboard::Square square);
+	inline void compute_pawn_attack(logic::Square square);
+	template <logic::Direction d, logic::Color c>
+	inline void compute_ray_attack(logic::Square square);
+	template <logic::Color>
+	inline void compute_rook_attack(logic::Square square);
+	template <logic::Color>
+	inline void compute_bishop_attack(logic::Square square);
+	template <logic::Color>
+	inline void compute_knight_attack(logic::Square square);
+	template <logic::Color>
+	inline void compute_queen_attack(logic::Square square);
+	inline void compute_king_attack(logic::Square square);
 
-	template <Piece p, Color c>
-	inline void compute_attack(bboard::Square square);
-	template <Piece p, Color c>
+	template <logic::Piece p, logic::Color c>
+	inline void compute_attack(logic::Square square);
+	template <logic::Piece p, logic::Color c>
 	inline void compute_pieces_attack();
-	template <Color>
+	template <logic::Color>
 	inline void compute_attacks();
 
 	// ++++++++ move ++++++++
-	template <bboard::Direction d, Color c>
-	inline void compute_ray_moves(bboard::Square square);
-	template <Color>
-	inline void compute_pawn_moves(bboard::Square square);
-	template <Color>
-	inline void compute_rook_moves(bboard::Square square);
-	template <Color>
-	inline void compute_bishop_moves(bboard::Square square);
-	template <Color>
-	inline void compute_knight_moves(bboard::Square square);
-	template <Color>
-	inline void compute_queen_moves(bboard::Square square);
-	template <Color>
-	inline void compute_king_moves(bboard::Square square);
-	template <Piece p, Color c>
-	constexpr void compute_piece_moves(bboard::Square square);
-	template <Color c>
+	template <logic::Direction d, logic::Color c>
+	inline void compute_ray_moves(logic::Square square);
+	template <logic::Color>
+	inline void compute_pawn_moves(logic::Square square);
+	template <logic::Color>
+	inline void compute_rook_moves(logic::Square square);
+	template <logic::Color>
+	inline void compute_bishop_moves(logic::Square square);
+	template <logic::Color>
+	inline void compute_knight_moves(logic::Square square);
+	template <logic::Color>
+	inline void compute_queen_moves(logic::Square square);
+	template <logic::Color>
+	inline void compute_king_moves(logic::Square square);
+	template <logic::Piece p, logic::Color c>
+	constexpr void compute_piece_moves(logic::Square square);
+	template <logic::Color c>
 	inline void compute_enpassant();
-	template <Color>
+	template <logic::Color>
 	inline void compute_castling();
 
-	template <Color c, bboard::Direction d>
+	template <logic::Color c, logic::Direction d>
 	inline void compute_pin();
-	template <Color c>
+	template <logic::Color c>
 	inline void compute_pins();
-	template <Piece p, Color c>
+	template <logic::Piece p, logic::Color c>
 	inline void compute_pieces_moves();
 
-	template <Color>
+	template <logic::Color>
 	inline void compute_moves();
-	template <Color>
+	template <logic::Color>
 	inline void compute_legal();
 
-	inline void update_castle(bboard::Square rook);
+	inline void update_castle(logic::Square rook);
 };
-}  // namespace cboard

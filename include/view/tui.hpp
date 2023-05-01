@@ -5,13 +5,13 @@
 
 class Tui : public View {
        private:
-	cboard::Chessboard chessboard;
+	Chessboard chessboard;
 
        public:
 	Tui()           = default;
 	~Tui() override = default;
 
-	void start_new_game(cboard::Chessboard chessboard) override;
-	void update(cboard::Chessboard chessboard) override;
+	void start_new_game(Chessboard chessboard) override;
+	void update(Chessboard chessboard) override;
 	void end() override;
 };

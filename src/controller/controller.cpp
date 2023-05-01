@@ -3,8 +3,6 @@
 #include "logic/chessboard.hpp"
 #include "player/player.hpp"
 
-using namespace cboard;
-
 void Controller::start() {
 	white->start_new_game(true);
 	black->start_new_game(false);
@@ -14,11 +12,13 @@ void Controller::start() {
 	bool is_invalid = false;
 	while (chessboard.get_game_state() == ONGOING) {
 		auto player = turn % 2 == 0 ? white.get() : black.get();
-		Move move   = is_invalid ? player->invalid_move(chessboard)
-					 : player->play(chessboard);
-		if (move.decision == PLAY) {
-			if (!chessboard.make_move(move.from, move.to,
-						  move.promotion)) {
+		Player_move player_move = is_invalid
+					      ? player->invalid_move(chessboard)
+					      : player->play(chessboard);
+
+		Action action = player_move.action;
+		if (action == PLAY) {
+			if (!chessboard.make_move(player_move.move)) {
 				is_invalid = true;
 				continue;
 			}
@@ -26,12 +26,12 @@ void Controller::start() {
 			is_invalid = false;
 			turn++;
 
-		} else if (move.decision == END) {
-			chessboard.set_game_state(cboard::ONGOING);
+		} else if (action == END) {
+			chessboard.set_game_state(ONGOING);
 			break;
-		} else if (move.decision == DRAW) {
-			chessboard.set_game_state(cboard::STALEMATE);
-		} else if (move.decision == RESIGN) {
+		} else if (action == DRAW) {
+			chessboard.set_game_state(STALEMATE);
+		} else if (action == RESIGN) {
 			chessboard.set_game_state(
 			    turn % 2 == 0 ? BLACK_CHECKMATE : WHITE_CHECKMATE);
 		}

@@ -5,10 +5,10 @@
 class View {
        public:
 	View() = default;
-	View(cboard::Chessboard);
+	View(Chessboard);
 	virtual ~View() = default;
 
-	virtual void start_new_game(cboard::Chessboard board) = 0;
-	virtual void update(cboard::Chessboard board)         = 0;
-	virtual void end()                                    = 0;
+	virtual void start_new_game(Chessboard board) = 0;
+	virtual void update(Chessboard board)         = 0;
+	virtual void end()                            = 0;
 };

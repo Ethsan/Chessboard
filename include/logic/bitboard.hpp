@@ -10,7 +10,7 @@
 #define DIAG_A18H   (Bitboard)0x8040201008040201
 #define DIAG_H1A8   (Bitboard)0x0102040810204080
 
-namespace bboard {
+namespace logic {
 
 typedef uint64_t Bitboard;
 
@@ -177,4 +177,4 @@ inline void bb_print(Bitboard bb) {
 	}
 }
 
-}  // namespace bboard
+}  // namespace logic

@@ -21,6 +21,7 @@ add_executable(chess_project
         src/logic/chessboard.cpp
         src/player/tui.cpp
         src/view/tui.cpp
+	src/board.cpp
         src/main.cpp)
 
 add_test(NAME test_1_chess_project COMMAND sh -c "cd ${PROJECT_SOURCE_DIR} && ./test-level.sh 1 ${CMAKE_CURRENT_BINARY_DIR}/chess_project")

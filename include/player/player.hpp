@@ -3,13 +3,11 @@
 #include "board.hpp"
 #include "logic/chessboard.hpp"
 
-enum Decision { PLAY, RESIGN, DRAW, END };
+enum Action { PLAY, RESIGN, DRAW, END };
 
-struct Move {
-	Decision decision;
-	board::Square from;
-	board::Square to;
-	board::Piece promotion = board::NO_PIECE;
+struct Player_move {
+	Action action;
+	board::Move move;
 };
 
 class Player {
@@ -17,8 +15,8 @@ class Player {
 	Player()          = default;
 	virtual ~Player() = default;
 
-	virtual void start_new_game(bool is_white)               = 0;
-	virtual Move play(cboard::Chessboard chessboard)         = 0;
-	virtual Move invalid_move(cboard::Chessboard chessboard) = 0;
-	virtual void end()                                       = 0;
+	virtual void start_new_game(bool is_white)              = 0;
+	virtual Player_move play(Chessboard chessboard)         = 0;
+	virtual Player_move invalid_move(Chessboard chessboard) = 0;
+	virtual void end()                                      = 0;
 };

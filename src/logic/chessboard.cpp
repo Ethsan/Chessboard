@@ -6,8 +6,7 @@
 #include "board.hpp"
 #include "logic/bitboard.hpp"
 
-using namespace cboard;
-using namespace bboard;
+using namespace logic;
 
 Square convert(board::Square square) {
 	return static_cast<Square>(square.col + square.line * 8);
@@ -683,11 +682,10 @@ inline void Chessboard::update_castle(Square rook) {
 	}
 }
 
-bool Chessboard::make_move(board::Square b_from, board::Square b_to,
-			   board::Piece b_promotion) {
-	Piece promotion = convert(b_promotion);
-	Square from     = convert(b_from);
-	Square to       = convert(b_to);
+bool Chessboard::make_move(board::Move move) {
+	Piece promotion = convert(move.promotion);
+	Square from     = convert(move.from);
+	Square to       = convert(move.to);
 
 	Color c = Color(turn_count % 2);
 	if (!(legal_moves[from] & bb_of(to))) return false;
@@ -759,5 +757,6 @@ bool Chessboard::make_move(board::Square b_from, board::Square b_to,
 		compute_legal<BLACK>();
 	}
 
+	last_move = move;
 	return true;
 }

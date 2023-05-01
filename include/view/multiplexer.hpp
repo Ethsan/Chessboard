@@ -22,12 +22,12 @@ class Demultiplexer : public View {
 	Demultiplexer &operator=(const Demultiplexer &) = delete;
 	Demultiplexer &operator=(Demultiplexer &&)      = delete;
 
-	void start_new_game(cboard::Chessboard chessboard) override {
+	void start_new_game(Chessboard chessboard) override {
 		u->start_new_game(chessboard);
 		v->start_new_game(chessboard);
 	}
 
-	void update(cboard::Chessboard chessboard) override {
+	void update(Chessboard chessboard) override {
 		u->update(chessboard);
 		v->update(chessboard);
 	}

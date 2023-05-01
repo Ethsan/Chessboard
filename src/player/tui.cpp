@@ -57,35 +57,38 @@ bool Player_tui::parse_move(string input, Move& move) {
 	} else {
 		return false;
 	}
-	move.decision = PLAY;
 	return true;
 }
 
-Move Player_tui::play(cboard::Chessboard chessboard) {
+Player_move Player_tui::play(Chessboard chessboard) {
 	if (!is_started) {
 		throw runtime_error(
 		    "Player_tui::play() called before "
 		    "Player_tui::start_new_game()");
 	}
 
-	Move move;
+	Player_move player_move;
+	Move& move = player_move.move;
 	cout << "Coup (eg. a1a8) ? ";
 	while (true) {
 		string input;
 		cin >> input;
 
 		if (input == "/resign") {
-			move.decision = RESIGN;
+			player_move.action = RESIGN;
 			break;
 		} else if (input == "/quit") {
-			move.decision = END;
+			player_move.action = END;
 			break;
 		} else if (input == "/draw") {
-			move.decision = DRAW;
+			player_move.action = DRAW;
 			break;
 		} else if (parse_move(input, move)) {
+			player_move.action = PLAY;
+
 			cout << "move: " << move.from.to_string()
 			     << move.to.to_string() << endl;
+
 			Colored_piece piece = chessboard.get_piece(move.from);
 			if (piece.piece == PAWN &&
 			    piece.color == (is_white ? WHITE : BLACK) &&
@@ -101,10 +104,10 @@ Move Player_tui::play(cboard::Chessboard chessboard) {
 			continue;
 		}
 	}
-	return move;
+	return player_move;
 }
 
-Move Player_tui::invalid_move(cboard::Chessboard chessboard) {
+Player_move Player_tui::invalid_move(Chessboard chessboard) {
 	if (!is_started) {
 		throw runtime_error(
 		    "Player_tui::invalid_move() called before "

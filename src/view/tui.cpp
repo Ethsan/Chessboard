@@ -15,24 +15,24 @@ static const constexpr char bright_bg[] = "\033[47m";
 static const constexpr char dark_bg[]   = "\033[40m";
 static const constexpr char reset_bg[]  = "\033[49m";
 
-std::string to_string(cboard::GameState state) {
+std::string to_string(GameState state) {
 	switch (state) {
-	case cboard::ONGOING:
+	case ONGOING:
 		return "?-?";
-	case cboard::WHITE_CHECKMATE:
+	case WHITE_CHECKMATE:
 		return "1-0";
-	case cboard::BLACK_CHECKMATE:
+	case BLACK_CHECKMATE:
 		return "0-1";
-	case cboard::STALEMATE:
+	case STALEMATE:
 		return "1/2-1/2";
 	default:
 		throw std::invalid_argument("Incorrect GameState");
 	}
 }
 
-void Tui::start_new_game(cboard::Chessboard chessboard) { update(chessboard); }
+void Tui::start_new_game(Chessboard chessboard) { update(chessboard); }
 
-void Tui::update(cboard::Chessboard chessboard) {
+void Tui::update(Chessboard chessboard) {
 	const Board board = chessboard.to_array();
 	cout << reset_bg << " ABCDEFGH" << endl;
 	char line = '8';

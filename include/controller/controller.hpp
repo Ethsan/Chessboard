@@ -13,7 +13,7 @@ class Controller {
 	std::unique_ptr<Player> white;
 	std::unique_ptr<Player> black;
 	std::unique_ptr<View> view;
-	cboard::Chessboard chessboard;
+	Chessboard chessboard;
 
        public:
 	Controller(std::unique_ptr<Player> white, std::unique_ptr<Player> black,
