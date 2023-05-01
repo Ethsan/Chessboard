@@ -2,9 +2,11 @@
 
 #include <iostream>
 #include <ostream>
+#include <vector>
 
 #include "board.hpp"
 #include "logic/bitboard.hpp"
+#include "logic/utils.hpp"
 
 using namespace logic;
 
@@ -206,20 +208,59 @@ GameState Chessboard::get_game_state() const {
 	return ONGOING;
 }
 
-template <Color c>
-inline bool Chessboard::can_castle() const {
-	return castling & (c == WHITE ? WHITE_CASTLE : BLACK_CASTLE);
-}
-
-template <Color c, Side s>
-inline bool Chessboard::can_castle() const {
-	return castling & (c == WHITE ? WHITE_CASTLE : BLACK_CASTLE) &
-	       (s == QUEENSIDE ? QUEENSIDE_CASTLE : KINGSIDE_CASTLE);
-}
-
 board::Colored_piece Chessboard::get_piece(board::Square square) const {
 	return board::Colored_piece(convert(get_piece(convert(square))),
 				    convert(get_color(convert(square))));
+}
+
+std::vector<board::Move> Chessboard::get_all_legal_moves() const {
+	const Color c = turn_count % 2 == WHITE ? WHITE : BLACK;
+
+	std::vector<board::Move> moves =
+	    std::vector<board::Move>((size_t)legal_move_count);
+	size_t count = 0;
+
+	Bitboard pawns = pieces[PAWN] & color[c];
+	auto is_on_last_line =
+	    c == WHITE ? is_on_line<LINE_8> : is_on_line<LINE_1>;
+	while (pawns) {
+		auto square         = static_cast<Square>(pop_lsb(pawns));
+		Bitboard pawn_moves = legal_moves[square];
+		while (pawn_moves) {
+			auto move = static_cast<Square>(pop_lsb(pawn_moves));
+			if (is_on_last_line(static_cast<Square>(move))) {
+				moves[count++] =
+				    board::Move{convert(square), convert(move),
+						board::QUEEN};
+				moves[count++] =
+				    board::Move{convert(square), convert(move),
+						board::ROOK};
+				moves[count++] =
+				    board::Move{convert(square), convert(move),
+						board::KNIGHT};
+				moves[count++] =
+				    board::Move{convert(square), convert(move),
+						board::BISHOP};
+			} else {
+				moves[count++] =
+				    board::Move{convert(square), convert(move)};
+			}
+		}
+	}
+
+	Bitboard other = color[c] & ~pieces[PAWN];
+	while (other) {
+		auto square          = static_cast<Square>(pop_lsb(other));
+		Bitboard piece_moves = legal_moves[square];
+		while (piece_moves) {
+			auto move = static_cast<Square>(pop_lsb(piece_moves));
+			moves[count++] =
+			    board::Move{convert(square), convert(move)};
+		}
+	}
+	assert(count == legal_move_count);
+
+	return moves;
 }
 
 Piece Chessboard::get_piece(Square square) const {
@@ -236,6 +277,17 @@ Color Chessboard::get_color(Square square) const {
 	if (color[WHITE] & bb_of(square)) return WHITE;
 	if (color[BLACK] & bb_of(square)) return BLACK;
 	return COLOR_NONE;
+}
+
+template <Color c>
+inline bool Chessboard::can_castle() const {
+	return castling & (c == WHITE ? WHITE_CASTLE : BLACK_CASTLE);
+}
+
+template <Color c, Side s>
+inline bool Chessboard::can_castle() const {
+	return castling & (c == WHITE ? WHITE_CASTLE : BLACK_CASTLE) &
+	       (s == QUEENSIDE ? QUEENSIDE_CASTLE : KINGSIDE_CASTLE);
 }
 
 template <Color c>
@@ -657,9 +709,20 @@ template <Color c>
 inline void Chessboard::compute_legal() {
 	compute_attacks<c>();
 	compute_moves<c>();
+
 	legal_move_count = 0;
 	for (auto &moves : legal_moves) {
 		legal_move_count += popcount(moves);
+	}
+	constexpr Bitboard last_line =
+	    c == WHITE ? bb_of(LINE_8) : bb_of(LINE_1);
+
+	Bitboard pawns = pieces[PAWN] & color[c];
+	while (pawns) {
+		Square square       = static_cast<Square>(pop_lsb(pawns));
+		Bitboard pawn_moves = legal_moves[square];
+		// add promotions, we add only 3 because one is already counted
+		legal_move_count += 3 * popcount(pawn_moves & last_line);
 	}
 }
 

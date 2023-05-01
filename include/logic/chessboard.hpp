@@ -3,6 +3,7 @@
 #include <array>
 #include <cassert>
 #include <string>
+#include <vector>
 
 #include "board.hpp"
 #include "logic/bitboard.hpp"
@@ -78,6 +79,7 @@ class Chessboard {
 	GameState get_game_state() const;
 	void set_game_state(GameState game_state);
 
+	std::vector<board::Move> get_all_legal_moves() const;
 	board::Move get_last_move() const { return last_move; };
 
 	board::Board to_array() const;
