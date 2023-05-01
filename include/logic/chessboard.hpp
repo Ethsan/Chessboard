@@ -74,6 +74,7 @@ class Chessboard {
 	bool is_same_as(const Chessboard& chessboard) const;
 	bool is_attacked(board::Square square) const;
 
+	int get_turn_count() const { return turn_count; };
 	board::Colored_piece get_piece(board::Square square) const;
 
 	GameState get_game_state() const;
