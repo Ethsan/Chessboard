@@ -13,27 +13,20 @@ INPUT                  = @doxy_main_page@ \
 INPUT_ENCODING         = UTF-8
 RECURSIVE              = YES
 
-EXTRACT_ALL = YES
-# Show private members of class
-EXTRACT_PRIVATE = YES
-
-# Show static members of class
-EXTRACT_STATIC = YES
-
 # Add all the header and source file extensions used
 FILE_PATTERNS = *.cpp *.hpp
 
 TAB_SIZE = 8
 
-QUIET = YES
-
-# Function source code shown inline
-INLINE_SOURCES = YES
-
-GENERATE_TREEVIEW = YES
-
-# Use UML notation for class diagrams
-UML_LOOK = YES
-
-# Show all members in UML class
-UML_LIMIT_NUM_FIELDS = 0
+EXTRACT_ALL          = YES
+CLASS_DIAGRAMS       = YES
+HIDE_UNDOC_RELATIONS = NO
+HAVE_DOT            = YES
+CLASS_GRAPH          = YES
+COLLABORATION_GRAPH  = YES
+UML_LOOK             = YES
+UML_LIMIT_NUM_FIELDS = 50
+TEMPLATE_RELATIONS   = YES
+DOT_GRAPH_MAX_NODES  = 100
+MAX_DOT_GRAPH_DEPTH  = 0
+DOT_TRANSPARENT      = YES
