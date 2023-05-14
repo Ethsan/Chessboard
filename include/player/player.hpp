@@ -1,6 +1,5 @@
 #pragma once
 
-#include "board.hpp"
 #include "logic/chessboard.hpp"
 
 enum Action { PLAY, RESIGN, DRAW, END };

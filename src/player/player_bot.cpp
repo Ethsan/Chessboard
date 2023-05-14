@@ -98,9 +98,11 @@ std::pair<Move, float> negaMax(Chessboard chessboard, int depth,
 	for (auto &move : moves) {
 		Chessboard new_chessboard = chessboard;
 		new_chessboard.make_move(move);
-		float complexity = (float)new_chessboard.get_legal_move_count() / 200 * 0.01;
+		float complexity =
+		    (float)new_chessboard.get_legal_move_count() / 200 * 0.01;
 		float score =
-		    -negaMax(new_chessboard, depth - 1, !is_player).second - complexity;
+		    -negaMax(new_chessboard, depth - 1, !is_player).second -
+		    complexity;
 
 		if (score > best_score) {
 			best_score = score;

@@ -1,10 +1,10 @@
-#include "player/tui.hpp"
+#include "player/player_tui.hpp"
 
+#include <iostream>
 #include <regex>
 #include <stdexcept>
 
 #include "board.hpp"
-#include "player/player.hpp"
 
 using namespace std;
 using namespace board;

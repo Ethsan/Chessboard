@@ -2,11 +2,9 @@
 
 #include <memory>
 
-#include "board.hpp"
 #include "logic/chessboard.hpp"
 #include "player/player.hpp"
 #include "view/noop_view.hpp"
-#include "view/view.hpp"
 
 class Controller {
        private:

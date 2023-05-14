@@ -1,9 +1,11 @@
+#pragma once
+
 #include "player/player.hpp"
 
 class Player_bot : public Player {
 	bool is_white;
 	bool is_started = false;
-	int max_depth = 4;
+	int max_depth   = 4;
 
        public:
 	~Player_bot() override = default;

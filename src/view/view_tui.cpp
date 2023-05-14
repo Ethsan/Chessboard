@@ -1,4 +1,4 @@
-#include "view/tui.hpp"
+#include "view/view_tui.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -30,9 +30,9 @@ std::string to_string(GameState state) {
 	}
 }
 
-void Tui::start_new_game(Chessboard chessboard) { update(chessboard); }
+void View_tui::start_new_game(Chessboard chessboard) { update(chessboard); }
 
-void Tui::update(Chessboard chessboard) {
+void View_tui::update(Chessboard chessboard) {
 	const Board board = chessboard.to_array();
 	cout << reset_bg << " ABCDEFGH" << endl;
 	char line = '8';
@@ -52,7 +52,7 @@ void Tui::update(Chessboard chessboard) {
 	this->chessboard = std::move(chessboard);
 }
 
-void Tui::end() {
+void View_tui::end() {
 	const Board board = chessboard.to_array();
 	cout << endl;
 	for (auto& line : board) {

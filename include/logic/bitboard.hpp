@@ -1,6 +1,6 @@
 #pragma once
+
 #include <cstdint>
-#include <iostream>
 
 #include "utils.hpp"
 
@@ -167,14 +167,4 @@ constexpr Bitboard ray_between(Square square, Bitboard obstacles) {
 	    ray<opposite(d)>(collision<d>(forward, obstacles));
 	return forward & backward;
 }
-
-inline void bb_print(Bitboard bb) {
-	for (auto i = 7; i >= 0; i--) {
-		for (auto j = 0; j < 8; j++) {
-			std::cout << ((bb >> (8 * i + j)) & 1);
-		}
-		std::cout << std::endl;
-	}
-}
-
 }  // namespace logic
