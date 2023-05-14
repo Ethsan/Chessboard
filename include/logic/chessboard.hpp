@@ -80,6 +80,7 @@ class Chessboard {
 	GameState get_game_state() const;
 	void set_game_state(GameState game_state);
 
+	int get_legal_move_count() const { return legal_move_count; };
 	std::vector<board::Move> get_all_legal_moves() const;
 	board::Move get_last_move() const { return last_move; };
 
