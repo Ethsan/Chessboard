@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <cassert>
 #include <stdexcept>
 #include <string>
 
@@ -29,14 +28,14 @@ class Colored_piece {
 
 	Colored_piece() : piece{NO_PIECE}, color{NO_COLOR} {};
 	Colored_piece(Piece piece, Color color) : piece{piece}, color{color} {};
-	Colored_piece(std::string pgn);
+	Colored_piece(std::string str);
 
 	bool is_valid() const {
 		return !((piece != NO_PIECE) xor (color != NO_COLOR));
 	}
 
+	std::string to_utf() const;
 	std::string to_string() const;
-	std::string to_pgn() const;
 };
 const Colored_piece xx = Colored_piece(NO_PIECE, NO_COLOR);
 
@@ -58,8 +57,8 @@ const Colored_piece black_pieces[] = {bK, bQ, bR, bB, bN, bP};
 
 typedef std::array<std::array<Colored_piece, 8>, 8> Board;
 
-Board from_pgn(const std::string& pgn);
-std::string to_pgn(const Board& board);
+Board from_string(const std::string& str);
+std::string to_string(const Board& board);
 
 const Board initial_board{{{wR, wN, wB, wQ, wK, wB, wN, wR},
 			   {wP, wP, wP, wP, wP, wP, wP, wP},

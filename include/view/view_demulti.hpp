@@ -1,4 +1,5 @@
 #pragma once
+
 #include <memory>
 
 #include "view/view.hpp"

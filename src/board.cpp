@@ -1,5 +1,7 @@
 #include "board.hpp"
 
+#include <cassert>
+
 using namespace board;
 
 Board from_pgn(const std::string& pgn) {
@@ -28,7 +30,7 @@ std::string to_pgn(const Board& board) {
 	std::string pgn;
 	for (const auto& line : board) {
 		for (const auto& square : line) {
-			pgn += square.to_pgn() + ",";
+			pgn += square.to_string() + ",";
 		}
 	}
 	return pgn;
@@ -79,7 +81,7 @@ Colored_piece::Colored_piece(std::string pgn) {
 		    "or 'P'");
 	}
 }
-std::string Colored_piece::to_string() const {
+std::string Colored_piece::to_utf() const {
 	const bool is_white = color == WHITE;
 
 	switch (piece) {
@@ -101,7 +103,7 @@ std::string Colored_piece::to_string() const {
 		assert(false);
 	}
 }
-std::string Colored_piece::to_pgn() const {
+std::string Colored_piece::to_string() const {
 	const bool is_white = color == WHITE;
 
 	switch (piece) {

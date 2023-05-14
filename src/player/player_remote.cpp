@@ -1,6 +1,7 @@
 #include "player/player_remote.hpp"
 
 #include <errno.h>
+#include <cassert>
 #include <poll.h>
 #include <string.h>
 

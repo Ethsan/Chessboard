@@ -1,12 +1,7 @@
 #include "logic/chessboard.hpp"
 
-#include <iostream>
-#include <ostream>
+#include <cassert>
 #include <vector>
-
-#include "board.hpp"
-#include "logic/bitboard.hpp"
-#include "logic/utils.hpp"
 
 using namespace logic;
 

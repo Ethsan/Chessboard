@@ -6,6 +6,7 @@
 #include <ostream>
 #include <utility>
 #include <vector>
+#include <cassert>
 
 #include "board.hpp"
 #include "logic/chessboard.hpp"

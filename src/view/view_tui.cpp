@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "board.hpp"
 #include "logic/chessboard.hpp"
 
 using namespace std;
@@ -44,7 +43,7 @@ void View_tui::update(Chessboard chessboard) {
 		for (auto piece : *rit) {
 			count++;
 			cout << (count % 2 ? bright_bg : dark_bg)
-			     << piece.to_string();
+			     << piece.to_utf();
 		}
 		cout << reset_bg << endl;
 	}
@@ -57,7 +56,7 @@ void View_tui::end() {
 	cout << endl;
 	for (auto& line : board) {
 		for (auto& square : line) {
-			cout << square.to_pgn() << ',';
+			cout << square.to_string() << ',';
 		}
 	}
 	cout << " " << to_string(chessboard.get_game_state()) << endl;
