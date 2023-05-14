@@ -21,6 +21,9 @@ enum Color : int {
 	BLACK,
 };
 
+/**
+ * @brief Class of a player piece
+ */
 class Colored_piece {
        public:
 	Piece piece;
@@ -55,6 +58,9 @@ const Colored_piece bP{PAWN, BLACK};
 const Colored_piece white_pieces[] = {wK, wQ, wR, wB, wN, wP};
 const Colored_piece black_pieces[] = {bK, bQ, bR, bB, bN, bP};
 
+/**
+ * @brief A board is a 2D array of Colored_piece
+ */
 typedef std::array<std::array<Colored_piece, 8>, 8> Board;
 
 Board from_string(const std::string& str);
@@ -91,6 +97,9 @@ enum Line : int {
 	LINE_8,
 };
 
+/**
+ * @brief Class of a square on the board
+ */
 class Square {
        public:
 	Line line;
@@ -102,12 +111,17 @@ class Square {
 		line = static_cast<Line>(square[1] - '1');
 		col  = static_cast<Column>(square[0] - 'a');
 	};
+
 	std::string to_string() const {
 		return std::string{static_cast<char>(col + 'a')} +
 		       std::string{static_cast<char>(line + '1')};
 	};
 };
 
+/**
+ * struct Move - A Move is assimilated to an origin and a destination, in the
+ * case of promotion of a pawn a piece is specified.
+ */
 struct Move {
 	Square from     = Square();
 	Square to       = Square();

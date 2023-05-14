@@ -1,3 +1,4 @@
+// ################   DOESNT WORK ############################
 #pragma once
 
 #include <arpa/inet.h>
@@ -35,6 +36,9 @@ class Socket {
 	void close();
 };
 
+/**
+ * @brief Don't use broken
+ */
 class Player_remote : public Player {
 	Socket socket;
 	bool is_white;

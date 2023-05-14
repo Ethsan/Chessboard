@@ -4,6 +4,13 @@
 
 #include "view/view.hpp"
 
+/**
+ * @brief View that render the game using two different views, its implemented
+ * to demonstrate how easy is to implement new views.
+ *
+ * @tparam U First view
+ * @tparam V Second view
+ */
 template <class U, class V>
 class View_demulti : public View {
 	static_assert(std::is_base_of<View, U>::value,

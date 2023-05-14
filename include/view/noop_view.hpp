@@ -2,6 +2,9 @@
 
 #include "view/view.hpp"
 
+/**
+ * @brief Simple view that does nothing
+ */
 class View_noop : public View {
        public:
 	View_noop() = default;

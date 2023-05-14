@@ -63,28 +63,94 @@ class Chessboard {
 	board::Move last_move;
 
        public:
+	/**
+	 * @brief Simple constructor with the initial board
+	 *
+	 * @param board Initial board
+	 */
 	Chessboard(const board::Board& board = board::initial_board);
 
+	/**
+	 * @brief Check if a move is legal and update the chessboard according
+	 * to it
+	 *
+	 * @param move Move to make
+	 * @return Boolean true if the move was legal, false otherwise
+	 */
 	bool make_move(board::Move move);
 
+	/**
+	 * @brief Check if a move is legal in constant time
+	 *
+	 * @param from origin square
+	 * @param to destination square
+	 * @return Boolean true if the move is legal, false otherwise
+	 */
 	bool is_legal(board::Square from, board::Square to) const;
+	/**
+	 * @brief Method to compare two positions
+	 *
+	 * @param chessboard Chessboard to compare to
+	 * @return true if the two positions are the same, false otherwise
+	 */
 	bool is_same_as(const Chessboard& chessboard) const;
-	bool is_attacked(board::Square square) const;
 
+	/**
+	 * @brief Get the current turn count
+	 *
+	 * @return int
+	 */
 	int get_turn_count() const { return turn_count; };
+	/**
+	 * @brief Get the piece on the square
+	 *
+	 * @param square Square to check
+	 * @return board::Colored_piece
+	 */
 	board::Colored_piece get_piece(board::Square square) const;
 
+	/**
+	 * @brief Get the current state of the game
+	 *
+	 * @return game_state GameState
+	 */
 	GameState get_game_state() const;
+	/**
+	 * @brief Set the state of the game in case a player resign or draw
+	 *
+	 * @param game_state GameState to set
+	 */
 	void set_game_state(GameState game_state);
 
+	/**
+	 * @brief Return the number of legal moves in constant time
+	 *
+	 * @return int Number of legal moves
+	 */
 	int get_legal_move_count() const { return legal_move_count; };
+	/**
+	 * @brief List all legal moves
+	 *
+	 * @return std::vector<board::Move>
+	 */
 	std::vector<board::Move> get_all_legal_moves() const;
+	/**
+	 * @brief Return the last move made
+	 *
+	 * @return board::Move
+	 */
 	board::Move get_last_move() const { return last_move; };
 
+	/**
+	 * @brief Create a board::Board from the current state of the chessboard
+	 *
+	 * @return board::Board
+	 */
 	board::Board to_array() const;
 
        private:
 	// --- Utils ---
+	bool is_attacked(board::Square square) const;
 	template <logic::Color c>
 	bool can_castle() const;
 	template <logic::Color c, logic::Side s>
